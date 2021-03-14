@@ -1,0 +1,55 @@
+{% extends 'bootstrap/base.html' %}
+
+<!--HEAD - STYLES - TITLE-->
+{% block title%} Who's taller? {% endblock %}
+{% block styles %}
+{{super()}}
+<script src="https://kit.fontawesome.com/788ab82027.js" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{url_for('.static', filename='style.css')}}">
+{% endblock %}
+
+<!--BODY-->
+<body>
+
+<!--NAVBAR-->
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button> <a class="navbar-brand title" href="/">Who's taller?</a>
+</div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('api')}}">API</a></li>
+                <li><a href="{{ url_for('about')}}">About</a></li>
+            </ul> </div> </div> </div>{% endblock %}
+
+<!--MAIN CONTAINER-->
+{% block content%}
+<section>
+<div class="container-fluid main">
+    {% block page_content%}
+
+    {% endblock %}
+</div>
+</section>
+<!--FOOTER    -->
+<section>
+<footer class="fixed-bottom">
+<p class="title foot">© alessioitalo 2021</p>
+<a class="mini-icon" href="https://github.com/alessioitalo"><span class="fab fa-github"></span></a>
+<a class="mini-icon" href="https://www.linkedin.com/in/alessiodalise/"><span class="fab fa-linkedin"></span></a>
+</footer>
+</section>
+{% endblock %}
+</div>
+</body>

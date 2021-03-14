@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+<div class="container-fluid main">
+    {% if char1:%}
+    <h3 class="title">Correct! {{char1}} is {{diff}} cm taller.</h3>
+    {% else %}
+    <h3 class="title">Who's taller?</h3>
+    {% endif %}
+    <h3>Score: {{score}}</h3>
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+
+            <h3 class="title">{{ character1.name }}</h3>
+            <h4>{{ character1.bio }}</h4>
+            <div class="img-div">
+                <a href="{{url_for('check1')}}">
+                    <img class="photo" src="{{ character1.photo }}" alt="{{ character1.name }}"></a>
+                        <div class="credit title"><p>Photo: {{ character1.credit }}</p></div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+
+            <h3 class="title">{{ character2.name }}</h3>
+            <h4>{{ character2.bio }}</h4>
+            <div class="img-div">
+                  <a href="{{url_for('check2')}}">
+                      <img class="photo" src="{{ character2.photo }}" alt="{{ character2.name}}"></a>
+                         <div class="credit title">Photo: {{ character2.credit }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock%}
