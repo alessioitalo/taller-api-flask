@@ -153,4 +153,4 @@ def add_info():
         return jsonify(response={'403':'Sorry, you are not authorized to add data.'}), 403
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
