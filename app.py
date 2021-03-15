@@ -65,7 +65,6 @@ def play():
                                diff=diff)
 
 
-
 @app.route('/check1')
 def check1():
     if character1.height > character2.height:
@@ -126,10 +125,6 @@ def get_info():
     random_character = choice(db.session.query(Taller).all())
     return jsonify(taller_schema.dump(random_character))
 
-@app.route('/get-all')
-def get_all():
-    pass
-
 
 @app.route('/add', methods=['POST'])
 def add_info():
@@ -153,4 +148,4 @@ def add_info():
         return jsonify(response={'403':'Sorry, you are not authorized to add data.'}), 403
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
