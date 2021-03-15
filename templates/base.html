@@ -8,7 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{{url_for('.static', filename='style.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+
 {% endblock %}
 
 <!--BODY-->
@@ -38,7 +39,6 @@
 <section>
 <div class="container-fluid main">
     {% block page_content%}
-
     {% endblock %}
 </div>
 </section>
@@ -49,7 +49,17 @@
 <a class="mini-icon" href="https://github.com/alessioitalo"><span class="fab fa-github"></span></a>
 <a class="mini-icon" href="https://www.linkedin.com/in/alessiodalise/"><span class="fab fa-linkedin"></span></a>
 </footer>
+
 </section>
 {% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+<script type="text/javascript" src="{{ url_for('static', filename = 'index.js') }}"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% endblock %}
+
 </div>
 </body>
+
