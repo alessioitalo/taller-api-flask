@@ -49,45 +49,40 @@ def home():
 @app.route('/play', methods=['GET', 'POST'])
 def play():
     global character1
-    char1 = session.get('char1')
-    diff = session.get('diff')
-    character1 = choice(db.session.query(Taller).all())
-    while True:
-        global character2
-        character2 = choice(db.session.query(Taller).all())
-        if character2.height != character1.height:
-            break
-    return render_template('play.html',
-                               character1=character1,
-                               character2=character2,
-                               score=score,
-                               char1=char1,
-                               diff=diff)
-
-
-@app.route('/check1')
-def check1():
-    if character1.height > character2.height:
-        global score
-        score += 1
-        session['char1'] = character1.name
-        session['diff'] = character1.height - character2.height
-        return redirect(url_for('play'))
-
+    global character2
+    global score
+    if request.method == 'POST':
+        if request.args['char'] == '1':
+            if character1.height > character2.height:
+                score += 1
+                session['char'] = character1.name
+                session['diff'] = character1.height - character2.height
+                return redirect(url_for('play'))
+            else:
+                return redirect(url_for('game_over'))
+        else:
+            if character2.height > character1.height:
+                score += 1
+                session['char'] = character2.name
+                session['diff'] = character2.height - character1.height
+                return redirect(url_for('play'))
+            else:
+                return redirect(url_for('game_over'))
     else:
-        return redirect(url_for('game_over'))
+        char = session.get('char')
+        diff = session.get('diff')
+        character1 = choice(db.session.query(Taller).all())
+        while True:
+            character2 = choice(db.session.query(Taller).all())
+            if character2.height != character1.height:
+                break
+        return render_template('play.html',
+                                   character1=character1,
+                                   character2=character2,
+                                   score=score,
+                                   char=char,
+                                   diff=diff)
 
-
-@app.route('/check2')
-def check2():
-    if character2.height > character1.height:
-        global score
-        score += 1
-        session['char1'] = character2.name
-        session['diff'] = character2.height - character1.height
-        return redirect(url_for('play'))
-    else:
-        return redirect(url_for('game_over'))
 
 @app.route('/game-over')
 def game_over():
@@ -148,4 +143,4 @@ def add_info():
         return jsonify(response={'403':'Sorry, you are not authorized to add data.'}), 403
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

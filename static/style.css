@@ -9,13 +9,22 @@ body{
     text-align: center;
     background-color: #e0eff5;
     margin-bottom: 10%;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Fredoka One', cursive;
 }
 
 @media screen and (max-width: 750px) {
     body {
         margin-bottom: 20%;
     }
+}
+
+h4, h3{
+    color: #33658a;
+}
+
+.main{
+    text-align: center;
+    padding-bottom: 1%;
 }
 
 /* NAVBAR */
@@ -38,12 +47,12 @@ body{
 
 /* HEADERS */
 
-.main{
-    text-align: center;
-    padding-bottom: 1%;
-
+.title{
+    font-family: 'Fredoka One', cursive;
+    color: #f26419;
 }
-.title-home{
+
+.home{
     margin-top: 15%;
     font-family: 'Fredoka One', cursive;
     color: #f26419;
@@ -52,9 +61,8 @@ body{
     padding-right: 0px;
 }
 
-.title{
-    font-family: 'Fredoka One', cursive;
-    color: #f26419;
+.play{
+    margin-top: 0;
 }
 
 /* BUTTONS */
@@ -69,21 +77,46 @@ body{
     border-color: #33658a;
 }
 
-/* PHOTOS */
+.char-button{
+    position: absolute;
+    background-color: Transparent;
+    border: Transparent;
+    display: inline;
+    align: center;
+    margin: auto;
+    top: 50%;
+    right: 25%;
+}
+
 
 .photo{
     width:350px;
     height:470px;
     object-fit: cover;
     border-radius: 5%;
+    filter: brightness(100%);
 }
+
+.photobutton{
+    background: Transparent;
+    border: Transparent;
+}
+
+.photobutton:hover{
+    filter: brightness(70%);
+}
+
+.photobutton:hover + .credit {
+    display: block;
+
+}
+
 @media screen and (max-width: 750px) {
     .photo {
         width:200px;
         height:320px;
     }
 }
-
 
 .credit{
     display: none;
@@ -92,7 +125,6 @@ body{
     width: 100%;
     height: 100%;
 }
-
 
 
 /* FOOTER */
