@@ -2,16 +2,15 @@
 
 {% block page_content %}
 
-    {% if char:%}
-    <h3 class="title play">Correct! {{char}} is {{diff}} cm taller.</h3>
-    {% else %}
+<!--    {% if char:%}-->
+<!--    <h3 class="title play">Correct! {{char}} is {{diff}} cm taller.</h3>-->
+<!--    {% else %}-->
     <h3 class="title play">Who's taller?</h3>
-    {% endif %}
-    <h3>Score: {{score}}</h3>
+<!--    {% endif %}-->
+<!--    <h3>Score: {{score}}</h3>-->
     <div class="row">
         <div class="col-lg-6 col-md-6">
-              
-            <form method="POST"  action="{{url_for('play', char='1')}}" >
+            <form method="POST"  action="{{url_for('play', choice='1')}}" >
                 <h3 class="title">{{ character1.name }}</h3>
                 <h4>{{ character1.bio }}</h4>
                 <button class="photobutton">
@@ -21,16 +20,17 @@
             </form>
         </div>
         <div class="col-lg-6 col-md-6">
-            <form method="POST"  action="{{url_for('play', char='2')}}" >
+            <form method="POST"  action="{{url_for('play', choice='2')}}" >
                 <h3 class="title">{{ character2.name }}</h3>
                 <h4>{{ character2.bio }}</h4>
                 <button class="photobutton">
                     <img class="photo" src="{{ character2.photo }}" alt="{{ character2.name}}"></a>
                 </button>
                     <p class="credit title" >Photo: {{ character2.credit }}</p>
-           </form>
+               </form>
 
         </div>
     </div>
 
 {% endblock%}
+
