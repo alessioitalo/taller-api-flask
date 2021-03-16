@@ -8,13 +8,13 @@ import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///taller_newdb.db'
-app.config['SECRET_KEY'] = 'mysecretkey'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 fa = FontAwesome(app)
 Bootstrap(app)
-API_SECRET_KEY = '296971'
+API_SECRET_KEY = os.environ.get('API_SECRET_KEY')
 
 score = 0
 character1 = None
@@ -143,4 +143,4 @@ def add_info():
         return jsonify(response={'403':'Sorry, you are not authorized to add data.'}), 403
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
