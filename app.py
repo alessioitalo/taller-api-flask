@@ -16,9 +16,6 @@ fa = FontAwesome(app)
 Bootstrap(app)
 API_SECRET_KEY = os.environ.get('API_SECRET_KEY')
 
-score = 0
-character1 = None
-character2 = None
 
 class Taller(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -45,43 +42,73 @@ def home():
     score = 0
     return render_template('home.html')
 
-
 @app.route('/play', methods=['GET', 'POST'])
 def play():
-    global character1
-    global character2
-    global score
+    score = 0
+    id_one = session.get('id_one')
+    id_two = session.get('id_two')
+    character1 = choice(db.session.query(Taller).all())
+    while True:
+        character2 = choice(db.session.query(Taller).all())
+        if character2.height != character1.height:
+            break
     if request.method == 'POST':
-        if request.args['char'] == '1':
-            if character1.height > character2.height:
-                score += 1
-                session['char'] = character1.name
-                session['diff'] = character1.height - character2.height
+        if request.args['choice'] == '1':
+            if Taller.query.filter_by(id=id_one).first().height > Taller.query.filter_by(id=id_two).first().height:
                 return redirect(url_for('play'))
             else:
                 return redirect(url_for('game_over'))
-        else:
-            if character2.height > character1.height:
-                score += 1
-                session['char'] = character2.name
-                session['diff'] = character2.height - character1.height
+        if request.args['choice'] == '2':
+            if Taller.query.filter_by(id=id_two).first().height > Taller.query.filter_by(id=id_one).first().height:
                 return redirect(url_for('play'))
             else:
                 return redirect(url_for('game_over'))
     else:
-        char = session.get('char')
-        diff = session.get('diff')
-        character1 = choice(db.session.query(Taller).all())
-        while True:
-            character2 = choice(db.session.query(Taller).all())
-            if character2.height != character1.height:
-                break
+        id_one = session['id_one'] = character1.id
+        id_two = session['id_two'] = character2.id
         return render_template('play.html',
                                    character1=character1,
                                    character2=character2,
-                                   score=score,
-                                   char=char,
-                                   diff=diff)
+                                   id_one=id_one,
+                                   id_two=id_two,
+                               )
+
+# @app.route('/play', methods=['GET', 'POST'])
+# def play():
+#     global character1
+#     global character2
+#     global score
+#     if request.method == 'POST':
+#         if request.args['char'] == '1':
+#             if character1.height > character2.height:
+#                 score += 1
+#                 session['char'] = character1.name
+#                 session['diff'] = character1.height - character2.height
+#                 return redirect(url_for('play'))
+#             else:
+#                 return redirect(url_for('game_over'))
+#         else:
+#             if character2.height > character1.height:
+#                 score += 1
+#                 session['char'] = character2.name
+#                 session['diff'] = character2.height - character1.height
+#                 return redirect(url_for('play'))
+#             else:
+#                 return redirect(url_for('game_over'))
+#     else:
+#         char = session.get('char')
+#         diff = session.get('diff')
+#         character1 = choice(db.session.query(Taller).all())
+#         while True:
+#             character2 = choice(db.session.query(Taller).all())
+#             if character2.height != character1.height:
+#                 break
+#         return render_template('play.html',
+#                                    character1=character1,
+#                                    character2=character2,
+#                                    score=score,
+#                                    char=char,
+#                                    diff=diff)
 
 
 @app.route('/game-over')
@@ -108,7 +135,7 @@ def about():
 def page_not_found(e):
     return render_template('404.html'), 404
 
-
+#
 @app.errorhandler(500)
 def internal_error(e):
     return render_template('500.html'), 505
