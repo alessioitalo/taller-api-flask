@@ -14,7 +14,7 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 fa = FontAwesome(app)
 Bootstrap(app)
-API_SECRET_KEY = os.environ.get('API_SECRET_KEY')
+API_SECRET_KEY = '296971'
 
 score = 0
 character1 = None

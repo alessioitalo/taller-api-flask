@@ -77,7 +77,7 @@ h4, h3{
     border-color: #33658a;
 }
 
-.char-button{
+/*.char-button{
     position: absolute;
     background-color: Transparent;
     border: Transparent;
@@ -86,7 +86,7 @@ h4, h3{
     margin: auto;
     top: 50%;
     right: 25%;
-}
+}*/
 
 
 .photo{
@@ -100,6 +100,7 @@ h4, h3{
 .photobutton{
     background: Transparent;
     border: Transparent;
+    outline: none;
 }
 
 .photobutton:hover{
