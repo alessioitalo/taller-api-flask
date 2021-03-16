@@ -42,47 +42,37 @@ taller_schema = TallerSchema()
 def home():
     session.clear()
     global score
-    score = 0
     return render_template('home.html')
-
 
 @app.route('/play', methods=['GET', 'POST'])
 def play():
-    global character1
-    global character2
-    global score
+    id_one = session.get('id_one')
+    id_two = session.get('id_two')
+    character1 = choice(db.session.query(Taller).all())
+    while True:
+        character2 = choice(db.session.query(Taller).all())
+        if character2.height != character1.height:
+            break
     if request.method == 'POST':
-        if request.args['char'] == '1':
-            if character1.height > character2.height:
-                score += 1
-                session['char'] = character1.name
-                session['diff'] = character1.height - character2.height
+        if request.args['choice'] == '1':
+            if Taller.query.filter_by(id=id_one).first().height > Taller.query.filter_by(id=id_two).first().height:
                 return redirect(url_for('play'))
             else:
                 return redirect(url_for('game_over'))
-        else:
-            if character2.height > character1.height:
-                score += 1
-                session['char'] = character2.name
-                session['diff'] = character2.height - character1.height
+        if request.args['choice'] == '2':
+            if Taller.query.filter_by(id=id_two).first().height > Taller.query.filter_by(id=id_one).first().height:
                 return redirect(url_for('play'))
             else:
                 return redirect(url_for('game_over'))
     else:
-        char = session.get('char')
-        diff = session.get('diff')
-        character1 = choice(db.session.query(Taller).all())
-        while True:
-            character2 = choice(db.session.query(Taller).all())
-            if character2.height != character1.height:
-                break
+        id_one = session['id_one'] = character1.id
+        id_two = session['id_two'] = character2.id
         return render_template('play.html',
                                    character1=character1,
                                    character2=character2,
-                                   score=score,
-                                   char=char,
-                                   diff=diff)
-
+                                   id_one=id_one,
+                                   id_two=id_two,
+                               )
 
 @app.route('/game-over')
 def game_over():
