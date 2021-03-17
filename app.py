@@ -4,6 +4,9 @@ from random import choice
 from flask_marshmallow import Marshmallow
 from flask_fontawesome import FontAwesome
 from flask_bootstrap import Bootstrap
+from flask_wtf import FlaskForm
+from wtforms import SubmitField, StringField, TextAreaField
+from wtforms.validators import DataRequired
 import os
 
 app = Flask(__name__)
@@ -16,7 +19,7 @@ fa = FontAwesome(app)
 Bootstrap(app)
 API_SECRET_KEY = os.environ.get('API_SECRET_KEY')
 
-
+# DATABASE
 class Taller(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True)
@@ -31,7 +34,16 @@ class TallerSchema(ma.Schema):
         fields = ('id','name','bio','height', 'photo', 'credit')
 
 taller_schema = TallerSchema()
-# db.create_all()
+
+
+#CONTACT FORM
+class ContactForm(FlaskForm):
+    name = StringField('Name*', validators=[DataRequired()])
+    email = StringField('Email*', validators=[DataRequired()])
+    subject = StringField('Subject')
+    message = TextAreaField('Message*', validators=[DataRequired()])
+    submit = SubmitField('Send')
+
 
 @app.route('/')
 @app.route('/home')
@@ -39,12 +51,10 @@ taller_schema = TallerSchema()
 def home():
     session.clear()
     global score
-    score = 0
     return render_template('home.html')
 
 @app.route('/play', methods=['GET', 'POST'])
 def play():
-    score = 0
     id_one = session.get('id_one')
     id_two = session.get('id_two')
     character1 = choice(db.session.query(Taller).all())
@@ -125,9 +135,14 @@ def api():
     return render_template('api.html')
 
 
-@app.route('/about')
+@app.route('/about', methods=['GET','POST'])
 def about():
-    return render_template('about.html')
+    form = ContactForm()
+    if form.validate_on_submit():
+        # TODO: update with flask-flash message
+        return 'Message sent!'
+    else:
+        return render_template('about.html', form=form)
 
 # ERROR HANDLERS
 
