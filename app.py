@@ -62,7 +62,6 @@ class ContactForm(FlaskForm):
 @app.route('/index')
 def home():
     session.clear()
-    global score
     return render_template('home.html')
 
 @app.route('/play', methods=['GET', 'POST'])
@@ -125,7 +124,7 @@ def about():
         email = request.form['email']
         subject = request.form['subject']
         body = request.form['message']
-        msg = Message(subject="Who's taller Contact Form", recipients=['alessioitalo@gmail.com'])
+        msg = Message(subject="Who's taller Contact Form", recipients=[RECEIVER])
         msg.html = "<h1>Who's taller Contact Form</h1>" \
                    f"<p>Message from{name}</p>"\
                    f"<p>Email address: {email}</p>" \
