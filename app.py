@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request,session, render_template, url_for, redirect
+from flask import Flask, jsonify, request,session, render_template, url_for, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from random import choice
 from flask_marshmallow import Marshmallow
@@ -6,17 +6,29 @@ from flask_fontawesome import FontAwesome
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, StringField, TextAreaField
+from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
+from flask_mail import Mail, Message
 import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///taller_newdb.db'
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 fa = FontAwesome(app)
-Bootstrap(app)
+bs = Bootstrap(app)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///taller_newdb.db'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+mail = Mail(app)
+
+RECEIVER = os.environ.get('RECEIVER_MAIL')
 API_SECRET_KEY = os.environ.get('API_SECRET_KEY')
 
 # DATABASE
@@ -39,9 +51,9 @@ taller_schema = TallerSchema()
 #CONTACT FORM
 class ContactForm(FlaskForm):
     name = StringField('Name*', validators=[DataRequired()])
-    email = StringField('Email*', validators=[DataRequired()])
+    email = EmailField('Email*', validators=[DataRequired()])
     subject = StringField('Subject')
-    message = TextAreaField('Message*', validators=[DataRequired()])
+    message = TextAreaField('Message*', render_kw={'class': 'form-control', 'rows': 6}, validators=[DataRequired()])
     submit = SubmitField('Send')
 
 
@@ -65,69 +77,39 @@ def play():
     if request.method == 'POST':
         if request.args['choice'] == '1':
             if Taller.query.filter_by(id=id_one).first().height > Taller.query.filter_by(id=id_two).first().height:
-                return redirect(url_for('play'))
+                return redirect(url_for('play',
+                                        char=Taller.query.filter_by(id=id_one).first().name,
+                                        diff=Taller.query.filter_by(id=id_one).first().height - Taller.query.filter_by(id=id_two).first().height)
+                                )
             else:
                 return redirect(url_for('game_over'))
         if request.args['choice'] == '2':
             if Taller.query.filter_by(id=id_two).first().height > Taller.query.filter_by(id=id_one).first().height:
-                return redirect(url_for('play'))
+                return redirect(url_for('play',
+                                        char=Taller.query.filter_by(id=id_two).first().name,
+                                        diff=Taller.query.filter_by(id=id_two).first().height - Taller.query.filter_by(id=id_one).first().height)
+                                )
             else:
                 return redirect(url_for('game_over'))
     else:
-        id_one = session['id_one'] = character1.id
-        id_two = session['id_two'] = character2.id
+        char = request.args.get('char')
+        diff = request.args.get('diff')
+        session['id_one'] = character1.id
+        session['id_two'] = character2.id
         return render_template('play.html',
                                    character1=character1,
                                    character2=character2,
-                                   id_one=id_one,
-                                   id_two=id_two,
+                                   id_one=session['id_one'],
+                                   id_two=session['id_two'],
+                                   char=char,
+                                   diff=diff,
                                )
-
-# @app.route('/play', methods=['GET', 'POST'])
-# def play():
-#     global character1
-#     global character2
-#     global score
-#     if request.method == 'POST':
-#         if request.args['char'] == '1':
-#             if character1.height > character2.height:
-#                 score += 1
-#                 session['char'] = character1.name
-#                 session['diff'] = character1.height - character2.height
-#                 return redirect(url_for('play'))
-#             else:
-#                 return redirect(url_for('game_over'))
-#         else:
-#             if character2.height > character1.height:
-#                 score += 1
-#                 session['char'] = character2.name
-#                 session['diff'] = character2.height - character1.height
-#                 return redirect(url_for('play'))
-#             else:
-#                 return redirect(url_for('game_over'))
-#     else:
-#         char = session.get('char')
-#         diff = session.get('diff')
-#         character1 = choice(db.session.query(Taller).all())
-#         while True:
-#             character2 = choice(db.session.query(Taller).all())
-#             if character2.height != character1.height:
-#                 break
-#         return render_template('play.html',
-#                                    character1=character1,
-#                                    character2=character2,
-#                                    score=score,
-#                                    char=char,
-#                                    diff=diff)
 
 
 @app.route('/game-over')
 def game_over():
-    global score
-    final_score = score
-    score = 0
     session.clear()
-    return render_template('gameover.html', final_score=final_score)
+    return render_template('gameover.html')
 
 
 @app.route('/api')
@@ -139,8 +121,19 @@ def api():
 def about():
     form = ContactForm()
     if form.validate_on_submit():
-        # TODO: update with flask-flash message
-        return 'Message sent!'
+        name = request.form['name']
+        email = request.form['email']
+        subject = request.form['subject']
+        body = request.form['message']
+        msg = Message(subject="Who's taller Contact Form", recipients=['alessioitalo@gmail.com'])
+        msg.html = "<h1>Who's taller Contact Form</h1>" \
+                   f"<p>Message from{name}</p>"\
+                   f"<p>Email address: {email}</p>" \
+                   f"<p>Subject: {subject}</p>" \
+                   f"<p>Message: {body}</p>"
+        mail.send(msg)
+        flash('Message sent! We will get in touch soon...')
+        return render_template('about.html', form=form)
     else:
         return render_template('about.html', form=form)
 
@@ -150,7 +143,7 @@ def about():
 def page_not_found(e):
     return render_template('404.html'), 404
 
-#
+
 @app.errorhandler(500)
 def internal_error(e):
     return render_template('500.html'), 505

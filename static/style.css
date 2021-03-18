@@ -77,18 +77,6 @@ h4, h3{
     border-color: #33658a;
 }
 
-/*.char-button{
-    position: absolute;
-    background-color: Transparent;
-    border: Transparent;
-    display: inline;
-    align: center;
-    margin: auto;
-    top: 50%;
-    right: 25%;
-}*/
-
-
 .photo{
     width:350px;
     height:470px;
@@ -101,16 +89,18 @@ h4, h3{
     background: Transparent;
     border: Transparent;
     outline: none;
+
+
 }
 
 .photobutton:hover{
     filter: brightness(70%);
 }
 
-.photobutton:hover + .credit {
+/*.photobutton:hover + .credit {
     display: block;
 
-}
+}*/
 
 @media screen and (max-width: 750px) {
     .photo {
@@ -120,7 +110,6 @@ h4, h3{
 }
 
 .credit{
-    display: none;
     position: relative;
     bottom: 5rem;
     width: 100%;
@@ -147,6 +136,17 @@ footer{
 
 .mini-icon{
     color: #e0eff5;
+}
+
+.about{
+    margin-left:10%;
+    margin-right: 10%;
+}
+
+.contact{
+    padding-left: 20%;
+    padding-right: 20%;
+    font-family: Roboto;
 }
 
 

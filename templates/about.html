@@ -4,11 +4,20 @@
 
 
 {% block page_content %}
+{% with messages = get_flashed_messages() %}
+   {% if messages %}
+      {% for message in messages %}
+<div class="alert alert-success" role="alert">{{ message }}</div>
+      {% endfor %}
+   {% endif %}
+{% endwith %}
 <h1 class="title">About</h1>
-<div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">
+
+
+<div class="about">
     <div>
-    <p><i>Who's taller?</i> was created by a tall guy who is trying to learn web development and that has always wondered which famous people were taller than him.</p>
+    <p><i>Who's taller?</i> was created by a tall guy who has always wondered which famous people were taller than him.</p>
+
     <p>The inspiration came from the <a href="http://www.higherlowergame.com/"><b>Higher Lower Game</b></a>, one of the most addictive games you'll ever play.</p>
 
     <p>This website is built with <a href="https://flask.palletsprojects.com/en/1.1.x/"><b>Flask</b></a>, a Python web framework.</p>
@@ -17,10 +26,9 @@
 
     <p>If you have any feedback, or for any other inquiry, feel free to drop me a message using the Contact Form below.</p>
 </div>
-    <div>
+    <div class="contact">
         {{ wtf.quick_form(form) }}
     </div>
 </div>
-    </div>
 
 {% endblock %}
