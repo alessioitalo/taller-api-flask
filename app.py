@@ -112,8 +112,9 @@ def play():
 
 @app.route('/game-over')
 def game_over():
+    final_score = session['score']
     session['score'] = 0
-    return render_template('gameover.html')
+    return render_template('gameover.html', final_score=final_score)
 
 
 @app.route('/api')
