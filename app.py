@@ -15,7 +15,8 @@ app = Flask(__name__)
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 fa = FontAwesome(app)
-bs = Bootstrap(app)
+Bootstrap(app)
+
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///taller_newdb.db'
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
@@ -61,7 +62,7 @@ class ContactForm(FlaskForm):
 @app.route('/home')
 @app.route('/index')
 def home():
-    session.clear()
+    session['score'] = 0
     return render_template('home.html')
 
 @app.route('/play', methods=['GET', 'POST'])
@@ -76,6 +77,7 @@ def play():
     if request.method == 'POST':
         if request.args['choice'] == '1':
             if Taller.query.filter_by(id=id_one).first().height > Taller.query.filter_by(id=id_two).first().height:
+                session['score'] += 1
                 return redirect(url_for('play',
                                         char=Taller.query.filter_by(id=id_one).first().name,
                                         diff=Taller.query.filter_by(id=id_one).first().height - Taller.query.filter_by(id=id_two).first().height)
@@ -84,6 +86,7 @@ def play():
                 return redirect(url_for('game_over'))
         if request.args['choice'] == '2':
             if Taller.query.filter_by(id=id_two).first().height > Taller.query.filter_by(id=id_one).first().height:
+                session['score'] += 1
                 return redirect(url_for('play',
                                         char=Taller.query.filter_by(id=id_two).first().name,
                                         diff=Taller.query.filter_by(id=id_two).first().height - Taller.query.filter_by(id=id_one).first().height)
@@ -93,6 +96,7 @@ def play():
     else:
         char = request.args.get('char')
         diff = request.args.get('diff')
+        score = session['score']
         session['id_one'] = character1.id
         session['id_two'] = character2.id
         return render_template('play.html',
@@ -102,12 +106,13 @@ def play():
                                    id_two=session['id_two'],
                                    char=char,
                                    diff=diff,
+                                   score=score
                                )
 
 
 @app.route('/game-over')
 def game_over():
-    session.clear()
+    session['score'] = 0
     return render_template('gameover.html')
 
 
