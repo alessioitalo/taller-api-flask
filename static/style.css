@@ -151,4 +151,14 @@ footer{
 }
 }
 
+code {
+  word-break: break-all;
+  margin: auto;
+  width: 70%;
+  display: block;
+  color: black;
+  text-align: left;
+  background-color: white;
+}
+
 

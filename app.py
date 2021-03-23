@@ -119,7 +119,8 @@ def game_over():
 
 @app.route('/api')
 def api():
-    return render_template('api.html')
+    response = choice(db.session.query(Taller).all())
+    return render_template('api.html', response=response)
 
 
 @app.route('/about', methods=['GET','POST'])

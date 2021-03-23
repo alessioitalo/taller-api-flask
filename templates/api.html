@@ -3,8 +3,25 @@
 
 {% block page_content %}
 <h1 class="title">API</h1>
-<h3>Work in Progress</h3>
-<ul>
-</ul>
-
+<div class="about">
+    <div>
+    <p>Our free-to-use JSON API will simply return a random entry from our database.</p>
+        <div>
+            <h4 class="title">How to use</h4>
+        <code>GET https://whostaller.herokuapp.com/get</code>
+        </div>
+        <div><h4 class="title">Response example</h4>
+        <code class="code">
+           {
+            <p>'id':'{{ response.id }}',</p>
+            <p>'name': {{ response.name }}',</p>
+            <p>'bio': {{ response.bio }}',</p>
+            <p>'height': {{ response.height }}',</p>
+            <p>'photo': {{ response.photo }}',</p>
+            <p>'credit': {{ response.credit }}'</p>
+            }
+        </code>
+        </div>
+        </div>
+    </div>
 {% endblock %}
